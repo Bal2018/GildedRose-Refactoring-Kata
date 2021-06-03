@@ -28,8 +28,10 @@ final class Item
         $this->quality = $quality;
     }
 
+
     public function __toString(): string
     {
         return "{$this->name}, {$this->sell_in}, {$this->quality}";
     }
+
 }
