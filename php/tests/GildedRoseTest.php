@@ -105,6 +105,16 @@ class GildedRoseTest extends TestCase
         ];
     }
 
+    /**
+     * @name conjured item
+     */
+    public function test_Conjured_item(): void
+    {
+        $items = [new Item('Conjured', 10, 10)];
+        $gildedRose = new GildedRose($items);
+        $this->setUpQuality($gildedRose, 2);
+        $this->assertEquals(6, $items[0]->quality);
+    }
 
 
 }
