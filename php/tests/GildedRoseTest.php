@@ -53,7 +53,6 @@ class GildedRoseTest extends TestCase
         $this->assertEquals(0, $items[0]->quality);
     }
 
-
     //Aged Brie tests
     public function test_AgedBrie_Quality_increases_theOlder_it_gets(): void
     {
@@ -64,6 +63,15 @@ class GildedRoseTest extends TestCase
         $this->assertEquals(11, $items[0]->quality);
     }
 
+    //Sulfuras tests
+    public function test_Sulfuras_quality_doesnt_change(): void
+    {
+        $items = [new Item('Sulfuras, Hand of Ragnaros', 10, 80)];
+        $gildedRose = new GildedRose($items);
+        $this->setUpQuality($gildedRose, 10);
+        $this->assertEquals(80, $items[0]->quality);
+    }
+
     //Backstage passes to a TAFKAL80ETC concert tests
     public function test_Quality_of_item_Backstage_passes_Quality_is_never_negative(): void
     {
@@ -72,15 +80,6 @@ class GildedRoseTest extends TestCase
         $this->setUpQuality($gildedRose, 11);
         $this->assertEquals(-1, $items[0]->sell_in);
         $this->assertEquals(0, $items[0]->quality);
-    }
-
-    //Sulfuras tests
-    public function test_Sulfuras_quality_doesnt_change(): void
-    {
-        $items = [new Item('Sulfuras, Hand of Ragnaros', 10, 80)];
-        $gildedRose = new GildedRose($items);
-        $this->setUpQuality($gildedRose, 10);
-        $this->assertEquals(80, $items[0]->quality);
     }
 
     /**
@@ -97,11 +96,11 @@ class GildedRoseTest extends TestCase
     public function qualityProvider()
     {
         return [
-            "10 days sellin" => [8, 10, 10,1],
+           "10 days sellin" => [8, 10, 10,1],
             "more than 10 days"=>[8,11,9,1],
             "less than 10 days"=>[8,9,10,1],
             "less than 5 days" => [4, 2,7,1],
-            "concert passed" => [11,1,0,2]
+           "concert passed" => [11,1,0,2]
         ];
     }
 
@@ -115,6 +114,5 @@ class GildedRoseTest extends TestCase
         $this->setUpQuality($gildedRose, 2);
         $this->assertEquals(6, $items[0]->quality);
     }
-
 
 }
