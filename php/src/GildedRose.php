@@ -20,15 +20,29 @@ final class GildedRose
         $this->items = $items;
     }
 
-    public function adjustQuality(Item $item, int $quantity)
+    public function adjustQuality(Item $item, int $quantity): void
     {
-        $item->quality = $item->quality + $quantity;
+        if ($item->quality < 50) {
+            $item->quality = $item->quality + $quantity;
+        }
+    }
+
+    public function adjustSellInByOne(Item $item ): void
+    {
+
+        $item->sell_in = $item->sell_in - 1;
     }
 
     public function updateQuality(): void
     {
         foreach ($this->items as $item) {
             switch ($item->name) {
+                case  ( 'Sulfuras, Hand of Ragnaros') :
+                    {
+                        $item->quality = 80;
+                    break;
+                }
+
                 case ('Conjured') :
                 {
                     $this->adjustQuality($item,-2);
@@ -37,13 +51,10 @@ final class GildedRose
 
                 case ('Aged Brie') :
                 {
-                    $this->adjustQuality($item,1);
-
-                    $item->sell_in = $item->sell_in - 1;
+                    $item->quality = $item->quality + 1;
+                    $this->adjustSellInByOne($item);
                     if ($item->sell_in < 0) {
-                        if ($item->quality < 50) {
-                            $this->adjustQuality($item,1);
-                        }
+                        $this->adjustQuality($item,1);
                     }
                     break;
                 }
@@ -51,41 +62,32 @@ final class GildedRose
                 case ('Backstage passes to a TAFKAL80ETC concert') :
                 {
                     if ($item->quality < 50) {
-                        $this->adjustQuality($item,1);;
+                        $item->quality = $item->quality + 1;
+
                         if ($item->sell_in < 11) {
-                            if ($item->quality < 50) {
-                                $this->adjustQuality($item,1);
-                            }
+                            $this->adjustQuality($item,1);
                         }
                         if ($item->sell_in < 6) {
-                            if ($item->quality < 50) {
-                                $this->adjustQuality($item,1);
-                                }
+                            $this->adjustQuality($item,1);
                             }
                     }
-
-                    $item->sell_in = $item->sell_in - 1;
+                    $this->adjustSellInByOne($item);
                     if ($item->sell_in < 0) {
                         $item->quality = $item->quality - $item->quality;
                     }
                     break;
                 }
-                case  ( 'Sulfuras, Hand of Ragnaros') :{
-                    break;
-                }
+
                 default :
                 {
                    if ($item->quality > 0) {
-                       $this->adjustQuality($item,-1);
+                       $item->quality = $item->quality -1;
                     }
-
-                    $item->sell_in = $item->sell_in - 1;
-
-                    if ($item->sell_in < 0) {
-                        if ($item->quality > 0) {
-                            $this->adjustQuality($item,-1);
+                    $this->adjustSellInByOne($item);
+                    if (($item->sell_in < 0) && ($item->quality > 0)) {
+                            $item->quality = $item->quality -1;
                         }
-                    }
+
 
                     break;
                 }

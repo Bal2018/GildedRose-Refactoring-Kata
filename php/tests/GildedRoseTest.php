@@ -100,7 +100,8 @@ class GildedRoseTest extends TestCase
             "more than 10 days"=>[8,11,9,1],
             "less than 10 days"=>[8,9,10,1],
             "less than 5 days" => [4, 2,7,1],
-           "concert passed" => [11,1,0,2]
+           "concert passed" => [11,1,0,2],
+
         ];
     }
 
@@ -113,6 +114,11 @@ class GildedRoseTest extends TestCase
         $gildedRose = new GildedRose($items);
         $this->setUpQuality($gildedRose, 2);
         $this->assertEquals(6, $items[0]->quality);
+
+        $items = [new Item('Conjured', 10, 80)];
+        $gildedRose = new GildedRose($items);
+        $this->setUpQuality($gildedRose, 2);
+        $this->assertEquals(80, $items[0]->quality);
     }
 
 }
