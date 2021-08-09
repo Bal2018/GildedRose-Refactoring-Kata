@@ -10,6 +10,7 @@ final class GildedRose
      * @var Item[]
      */
     private $items;
+
     /**
      * @var int
      */
@@ -27,72 +28,73 @@ final class GildedRose
         }
     }
 
+    public function actionsForItems(Item $item)
+    {
+        switch ($item->name) {
+            case  ('Sulfuras, Hand of Ragnaros') :
+            {
+                $item->quality = 80;
+                break;
+            }
+            case ('Conjured') :
+            {
+                $this->adjustQuality($item,-2);
+                break;
+            }
+            case ('Aged Brie') :
+            {
+                $item->quality = $item->quality + 1; //$this->adjustQuality($item,1);
+                $this->adjustSellInByOne($item);
+                if ($item->sell_in < 0) {
+                    $this->adjustQuality($item,1);
+                }
+                break;
+            }
+
+            case ('Backstage passes to a TAFKAL80ETC concert') :
+            {
+                if ($item->quality < 50) {
+                    $item->quality += 1;
+
+                    if ($item->sell_in < 11) {
+                        $this->adjustQuality($item,1);
+                    }
+                    if ($item->sell_in < 6) {
+                        $this->adjustQuality($item,1);
+                    }
+                }
+                $this->adjustSellInByOne($item);
+                if ($item->sell_in < 0) {
+                    $item->quality = 0;
+                }
+                break;
+            }
+
+            default :
+            {
+                if ($item->quality > 0) {
+                    $item->quality = $item->quality -1;
+                }
+                $this->adjustSellInByOne($item);
+                if (($item->sell_in < 0) && ($item->quality > 0)) {
+                    $item->quality = $item->quality -1;
+                }
+                break;
+            }
+
+        }
+    }
+    
     public function adjustSellInByOne(Item $item ): void
     {
-
         $item->sell_in = $item->sell_in - 1;
     }
 
     public function updateQuality(): void
     {
         foreach ($this->items as $item) {
-            switch ($item->name) {
-                case  ( 'Sulfuras, Hand of Ragnaros') :
-                    {
-                        $item->quality = 80;
-                    break;
-                }
+          $this->actionsForItems($item);
 
-                case ('Conjured') :
-                {
-                    $this->adjustQuality($item,-2);
-                    break;
-                }
-
-                case ('Aged Brie') :
-                {
-                    $item->quality = $item->quality + 1;
-                    $this->adjustSellInByOne($item);
-                    if ($item->sell_in < 0) {
-                        $this->adjustQuality($item,1);
-                    }
-                    break;
-                }
-
-                case ('Backstage passes to a TAFKAL80ETC concert') :
-                {
-                    if ($item->quality < 50) {
-                        $item->quality = $item->quality + 1;
-
-                        if ($item->sell_in < 11) {
-                            $this->adjustQuality($item,1);
-                        }
-                        if ($item->sell_in < 6) {
-                            $this->adjustQuality($item,1);
-                            }
-                    }
-                    $this->adjustSellInByOne($item);
-                    if ($item->sell_in < 0) {
-                        $item->quality = $item->quality - $item->quality;
-                    }
-                    break;
-                }
-
-                default :
-                {
-                   if ($item->quality > 0) {
-                       $item->quality = $item->quality -1;
-                    }
-                    $this->adjustSellInByOne($item);
-                    if (($item->sell_in < 0) && ($item->quality > 0)) {
-                            $item->quality = $item->quality -1;
-                        }
-
-
-                    break;
-                }
-
-            }
         }
     }
 }
